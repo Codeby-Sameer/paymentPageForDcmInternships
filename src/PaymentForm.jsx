@@ -1,10 +1,6 @@
-
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { handlePayment } from './services/handlePayment';
-
-
-
 
 const RazorpayPaymentForm = () => {
     // program options with pricing
@@ -26,6 +22,15 @@ const RazorpayPaymentForm = () => {
     // Semester options
     const semesterOptions = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
 
+ const collegeOptions = [
+        { name: 'K G Reddy College of Engineering', code: 'KGRCE' },
+        { name: 'JNTU Hyderabad', code: 'JNTUH' },
+        { name: 'Osmania University', code: 'OU' },
+        { name: 'Chaitanya Bharathi Institute of Technology', code: 'CBIT' },
+        { name: 'Vasavi College of Engineering', code: 'VCE' },
+        { name: 'Muffakham Jah College of Engineering', code: 'MJCE' },
+        { name: 'Other', code: 'OTHER' }
+    ];
     // Form validation schema
     const validationSchema = Yup.object({
         name: Yup.string().required('Name is required'),
@@ -37,7 +42,9 @@ const RazorpayPaymentForm = () => {
         semester: Yup.string().required('Semester is required'),
         rollNumber: Yup.string().required('Roll number is required'),
         program: Yup.string().required('Please select a program'),
-        amount: Yup.number().required('Amount is required')
+        amount: Yup.number().required('Amount is required'),
+        collegeName: Yup.string().required('College name is required'),
+        collegeCode: Yup.string().required('College code is required')
     });
 
     const formik = useFormik({
@@ -46,12 +53,13 @@ const RazorpayPaymentForm = () => {
             email: '',
             phone: '',
             department: '',
-            course:"data science",
+            course: "data science",
             semester: '',
             rollNumber: '',
             program: '',
             amount: 0,
-            college: 'K G reddy college of engineering' // Fixed college name
+            collegeName: '',
+            collegeCode: '' 
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -67,245 +75,327 @@ const RazorpayPaymentForm = () => {
         formik.setFieldValue('amount', selectedprogram ? selectedprogram.amount : 0);
     };
 
+    // Handle college change - update both name and code
+    const handleCollegeChange = (e) => {
+        const selectedCollege = collegeOptions.find(college => college.name === e.target.value);
+        formik.setFieldValue('collegeName', e.target.value);
+        formik.setFieldValue('collegeCode', selectedCollege ? selectedCollege.code : '');
+    };
 
+    // Handle custom college input
+    const handleCustomCollege = () => {
+        if (formik.values.collegeName === 'Other') {
+            formik.setFieldValue('collegeName', '');
+            formik.setFieldValue('collegeCode', '');
+        }
+    };
+    // Handle college selection from datalist
+const handleCollegeInput = (e) => {
+    const selectedCollegeName = e.target.value;
+    formik.setFieldValue('collegeName', selectedCollegeName);
+    
+    // Find the college from options and auto-fill code
+    const selectedCollege = collegeOptions.find(college => college.name === selectedCollegeName);
+    if (selectedCollege) {
+        formik.setFieldValue('collegeCode', selectedCollege.code);
+    }
+};
 
     return (
-      <div className='lg:w-3/4  ' >
-  <div  className="bg-white shadow-lg p-10">
-    {/* Title */}
-    <div className="title mb-6">
-      <h2 className="text-xl font-semibold text-gray-900">Payment Details</h2>
-      <div className="title-underline w-12 h-1 bg-blue-600 mt-2"></div>
-    </div>
+        <div className='lg:w-3/4'>
+            <div className="bg-white shadow-lg p-10">
+                {/* Title */}
+                <div className="title mb-6">
+                    <h2 className="text-xl font-semibold text-gray-900">Payment Details</h2>
+                    <div className="title-underline w-12 h-1 bg-blue-600 mt-2"></div>
+                </div>
 
-    {/* Form Section */}
-    <div>
-      <form onSubmit={formik.handleSubmit} className="UI-form space-y-4">
-        {/* Name */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Name of the student *
-          </label>
-          <div className="Field-content">
-            <input
-              type="text"
-              name="name"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.name && formik.touched.name ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter your name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.errors.name && formik.touched.name && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.name}</div>
-            )}
-          </div>
-        </div>
+                {/* Form Section */}
+                <div>
+                    <form onSubmit={formik.handleSubmit} className="UI-form space-y-4">
+                        {/* Name */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Name of the student *
+                            </label>
+                            <div className="Field-content">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.name && formik.touched.name ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Enter your name"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.errors.name && formik.touched.name && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.name}</div>
+                                )}
+                            </div>
+                        </div>
 
-        {/* Email */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Email *
-          </label>
-          <div className="Field-content">
-            <input
-              type="email"
-              name="email"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.email && formik.touched.email ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter your email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.errors.email && formik.touched.email && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.email}</div>
-            )}
-          </div>
-        </div>
+                        {/* Email */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Email *
+                            </label>
+                            <div className="Field-content">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.email && formik.touched.email ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Enter your email"
+                                    value={formik.values.email}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.errors.email && formik.touched.email && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.email}</div>
+                                )}
+                            </div>
+                        </div>
 
-        {/* Phone */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Phone *
-          </label>
-          <div className="Field-content">
-            <input
-              type="tel"
-              name="phone"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.phone && formik.touched.phone ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter your phone number"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.errors.phone && formik.touched.phone && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.phone}</div>
-            )}
-          </div>
-        </div>
+                        {/* Phone */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Phone *
+                            </label>
+                            <div className="Field-content">
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.phone && formik.touched.phone ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Enter your phone number"
+                                    value={formik.values.phone}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.errors.phone && formik.touched.phone && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.phone}</div>
+                                )}
+                            </div>
+                        </div>
 
-        {/* Department */}
+                      {/* College Name */}
 <div className="Field">
-  <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-    Department *
-  </label>
-  <div className="Field-content">
-    <div className="relative">
-      {/* Input field that works with dropdown */}
-      <input
-        type="text"
-        name="department"
-        list="departmentOptions"
-        className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-          formik.errors.department && formik.touched.department ? 'border-red-500' : 'border-gray-300'
-        }`}
-        placeholder="Select or type your department"
-        value={formik.values.department}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-      />
-      
-      {/* HTML5 datalist for dropdown suggestions */}
-      <datalist id="departmentOptions">
-        {departmentOptions.map((dept) => (
-          <option key={dept} value={dept} />
-        ))}
-      </datalist>
-    </div>
-
-    {formik.errors.department && formik.touched.department && (
-      <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.department}</div>
-    )}
-  </div>
-</div>
-
-        {/* Semester */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Semester *
-          </label>
-          <div className="Field-content">
-            <select
-              name="semester"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.semester && formik.touched.semester ? 'border-red-500' : 'border-gray-300'
-              }`}
-              value={formik.values.semester}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            >
-              <option value="">Select Semester</option>
-              {semesterOptions.map((sem) => (
-                <option key={sem} value={sem}>{sem} Semester</option>
-              ))}
-            </select>
-            {formik.errors.semester && formik.touched.semester && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.semester}</div>
-            )}
-          </div>
-        </div>
-
-        {/* Roll Number */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Roll Number *
-          </label>
-          <div className="Field-content">
+    <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+        College Name *
+    </label>
+    <div className="Field-content">
+        <div className="relative">
             <input
-              type="text"
-              name="rollNumber"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.rollNumber && formik.touched.rollNumber ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter roll number"
-              value={formik.values.rollNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+                type="text"
+                name="collegeName"
+                list="collegeOptions"
+                className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    formik.errors.collegeName && formik.touched.collegeName ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Select from dropdown or type your college name"
+                value={formik.values.collegeName}
+                onChange={handleCollegeInput}
+                onBlur={(e) => {
+                    formik.handleBlur(e);
+                    // Auto-fill code when user selects from dropdown and moves away
+                    const selectedCollege = collegeOptions.find(college => college.name === e.target.value);
+                    if (selectedCollege && formik.values.collegeCode === '') {
+                        formik.setFieldValue('collegeCode', selectedCollege.code);
+                    }
+                }}
             />
-            {formik.errors.rollNumber && formik.touched.rollNumber && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.rollNumber}</div>
-            )}
-          </div>
+            
+            <datalist id="collegeOptions">
+                {collegeOptions.map((college) => (
+                    <option key={college.code} value={college.name}>
+                        {college.name} ({college.code})
+                    </option>
+                ))}
+            </datalist>
         </div>
-
-        {/* program Selection */}
-        <div className="Field">
-          <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
-            Choose program *
-          </label>
-          <div className="Field-content">
-            <select
-              name="program"
-              className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.errors.program && formik.touched.program ? 'border-red-500' : 'border-gray-300'
-              }`}
-              value={formik.values.program}
-              onChange={handleprogramChange}
-              onBlur={formik.handleBlur}
-            >
-              <option value="">Select a program</option>
-              {programOptions.map((program) => (
-                <option key={program.id} value={program.id}>
-                  {program.name} - {program.days} days - ₹{program.amount}
-                </option>
-              ))}
-            </select>
-            {formik.errors.program && formik.touched.program && (
-              <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.program}</div>
-            )}
-          </div>
-        </div>
-
-        {/* Amount Display */}
-        <div className="Field Field--amount bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <div className="Field-label text-sm font-medium text-gray-700 mb-2">
-            Amount
-          </div>
-          <div className="Field-content">
-            <div className="Field-wrapper flex items-center">
-              <span className="Field-addon Field-addon--before mr-2">
-                <span className="currency-symbol font-bold text-gray-900">₹</span>
-              </span>
-              <div className="Field-el">
-                <label className="font-bold text-2xl text-gray-900">
-                  {formik.values.amount}.00
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Form Footer */}
-        <div id="form-footer" className="mt-6">
-          <div className="form-footer-payment flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <img
-              id="fin-logo"
-              alt="pay-methods"
-              src="https://cdn.razorpay.com/static/assets/pay_methods_branding.png"
-              width="180"
-              className="mb-4 sm:mb-0"
-            />
-
-            <button
-              type="submit"
-              className="btn btn--gradient bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-md transition-colors flex items-center"
-              tabIndex="0"
-            >
-              Pay <span className="ml-2">₹ {formik.values.amount}.00</span>
-            </button>
-          </div>
-        </div>
-      </form>
+        {formik.errors.collegeName && formik.touched.collegeName && (
+            <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.collegeName}</div>
+        )}
     </div>
-  </div>
 </div>
 
+{/* College Code */}
+<div className="Field">
+    <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+        College Code *
+    </label>
+    <div className="Field-content">
+        <input
+            type="text"
+            name="collegeCode"
+            className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                formik.errors.collegeCode && formik.touched.collegeCode ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="Enter college code"
+            value={formik.values.collegeCode}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+        />
+        {formik.errors.collegeCode && formik.touched.collegeCode && (
+            <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.collegeCode}</div>
+        )}
+    </div>
+</div>
+                        {/* Department */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Department *
+                            </label>
+                            <div className="Field-content">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        name="department"
+                                        list="departmentOptions"
+                                        className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                            formik.errors.department && formik.touched.department ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                        placeholder="Select or type your department"
+                                        value={formik.values.department}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                    />
+                                    <datalist id="departmentOptions">
+                                        {departmentOptions.map((dept) => (
+                                            <option key={dept} value={dept} />
+                                        ))}
+                                    </datalist>
+                                </div>
+                                {formik.errors.department && formik.touched.department && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.department}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Semester */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Semester *
+                            </label>
+                            <div className="Field-content">
+                                <select
+                                    name="semester"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.semester && formik.touched.semester ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    value={formik.values.semester}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">Select Semester</option>
+                                    {semesterOptions.map((sem) => (
+                                        <option key={sem} value={sem}>{sem} Semester</option>
+                                    ))}
+                                </select>
+                                {formik.errors.semester && formik.touched.semester && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.semester}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Roll Number */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Roll Number *
+                            </label>
+                            <div className="Field-content">
+                                <input
+                                    type="text"
+                                    name="rollNumber"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.rollNumber && formik.touched.rollNumber ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Enter roll number"
+                                    value={formik.values.rollNumber}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.errors.rollNumber && formik.touched.rollNumber && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.rollNumber}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Program Selection */}
+                        <div className="Field">
+                            <label className="Field-label block text-sm font-medium text-gray-700 mb-2">
+                                Choose Program *
+                            </label>
+                            <div className="Field-content">
+                                <select
+                                    name="program"
+                                    className={`Field-el w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                        formik.errors.program && formik.touched.program ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    value={formik.values.program}
+                                    onChange={handleprogramChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">Select a program</option>
+                                    {programOptions.map((program) => (
+                                        <option key={program.id} value={program.id}>
+                                            {program.name} - {program.days} days - ₹{program.amount}
+                                        </option>
+                                    ))}
+                                </select>
+                                {formik.errors.program && formik.touched.program && (
+                                    <div className="Field-error text-red-500 text-xs mt-1">{formik.errors.program}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Amount Display */}
+                        <div className="Field Field--amount bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <div className="Field-label text-sm font-medium text-gray-700 mb-2">
+                                Amount
+                            </div>
+                            <div className="Field-content">
+                                <div className="Field-wrapper flex items-center">
+                                    <span className="Field-addon Field-addon--before mr-2">
+                                        <span className="currency-symbol font-bold text-gray-900">₹</span>
+                                    </span>
+                                    <div className="Field-el">
+                                        <label className="font-bold text-2xl text-gray-900">
+                                            {formik.values.amount}.00
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Form Footer */}
+                        <div id="form-footer" className="mt-6">
+                            <div className="form-footer-payment flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                                <img
+                                    id="fin-logo"
+                                    alt="pay-methods"
+                                    src="https://cdn.razorpay.com/static/assets/pay_methods_branding.png"
+                                    width="180"
+                                    className="mb-4 sm:mb-0"
+                                />
+
+                                <button
+                                    type="submit"
+                                    className="btn btn--gradient bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-md transition-colors flex items-center"
+                                    tabIndex="0"
+                                >
+                                    Pay <span className="ml-2">₹ {formik.values.amount}.00</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 };
 

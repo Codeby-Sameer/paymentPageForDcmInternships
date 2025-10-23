@@ -1,7 +1,7 @@
 import { Mail, Phone } from "lucide-react";
 
 const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) => {
-    // Backend data object structure
+   
     const backendData = {
         company: {
             name: "Design Career Metrics",
@@ -9,7 +9,7 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
             shortName: "DC",
             email: "hr@designcareermetrics.com",
             phone: "+91  7337572543",
-            collaboration: "K G Reddy Engineering College"
+           
         },
         program: {
             title: "Industrial Trainings For B.Tech Students",
@@ -70,11 +70,11 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
             {/* Main Content */}
             <div className="space-y-3 lg:space-y-1 ">
                 {/* Program Title */}
-                <div className="px-2 ">
+                <div className="px-2  w-3/4  mx-auto">
                     <h2 className="text-lg lg:text-2xl font-bold text-gray-900 text-center lg:text-start leading-tight">
                         {program.title}
                     </h2>
-                    <div className="w-3/4 mx-auto h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mt-2  rounded-full  "></div>
+                    <div className="w-4/4   h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mt-2  rounded-full  "></div>
                 </div>
 
                 {/* Program Description */}
@@ -131,8 +131,8 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                     </div>
 
                     {/* Organizer Details */}
-                    <div className=" p-3 lg:p-4 ">
-                        <h3 className="font-semibold text-gray-900 text-base lg:text-lg mb-2 lg:mb-3 flex items-center">
+                    <div className=" p-3 lg:p-4  ">
+                        <h3 className="font-semibold text-gray-900 text-base lg:text-lg  flex items-center">
                             Organized By
                         </h3>
                         <div className="flex items-center space-x-3 lg:space-x-4">
@@ -142,8 +142,8 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                                 </span>
                             </div>
                             <div>
-                                <p className="font-semibold text-gray-900 text-lg lg:text-base">{company.name}</p>
-                                <p className="text-xs lg:text-sm text-gray-600">campus learning partner </p>
+                                <p className="font-semibold text-gray-900 text-xl lg:text-base lg:text-xl">{company.name}</p>
+                                <p className="text-xs lg:text-sm text-gray-600">Campus Training Partner </p>
                                 <p className="text-xs lg:text-sm text-gray-700">{company.collaboration}</p>
                             </div>
                         </div>
@@ -152,8 +152,8 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
 
 
                 {/* Support Details */}
-                <div className=" p-3 lg:p-4 m-0  -mt-4">
-                    <h3 className="font-semibold text-gray-700 text-base lg:text-lg mb-1 lg:mb-4 flex items-center">
+                <div className=" p-3 lg:p-4">
+                    <h3 className="font-semibold text-gray-700 text-base lg:text-lg mb-1 flex items-center">
 
                         Contact Us
                     </h3>
@@ -187,6 +187,7 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                     <div className="text-xs lg:text-sm text-gray-600 space-y-1 lg:space-y-2 leading-relaxed">
                         <p>● You agree to share information entered on this page with Design Career Metrics and Razorpay</p>
                         <p>● Fees once paid are non-refundable</p>
+                        <p>● Make sure that Enter Correct College Name , Code , Roll Number and Other Details</p>
                         <p>● Certificate will be provided upon successful completion by <a href="https://leviticatechnologies.com" target="_blank" className="text-blue-600 hover:text-blue-500">Levitica Technologies Pvt Ltd</a></p>
                         <p>● 80% attendance is mandatory for certification</p>
                         <p>● All payments are secured with 256-bit SSL encryption</p>
@@ -212,7 +213,7 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                         <img
                             src="/img/dcm logo.jpg"
                             alt="dcm logo"
-                            className="h-5 lg:h-12 mx-auto lg:mx-0"
+                            className="h-10 lg:h-12 mx-auto lg:mx-0"
                         />
                         <div className="flex items-center space-x-2">
                             <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-green-500 rounded-full animate-pulse"></div>
