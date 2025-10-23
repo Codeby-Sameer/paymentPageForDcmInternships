@@ -143,7 +143,7 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                             </div>
                             <div>
                                 <p className="font-semibold text-gray-900 text-lg lg:text-base">{company.name}</p>
-                                <p className="text-xs lg:text-sm text-gray-600">in collaboration with</p>
+                                <p className="text-xs lg:text-sm text-gray-600">campus learning partner </p>
                                 <p className="text-xs lg:text-sm text-gray-700">{company.collaboration}</p>
                             </div>
                         </div>
