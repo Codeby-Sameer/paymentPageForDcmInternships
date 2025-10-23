@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your existing styles below */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoa UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Add this to your existing CSS */
+body {
+  overflow-x: hidden;
+}
+
+
+@media (max-width: 1023px) {
+ 
+}
+  .form-position-ab{
+    position: absolute;
+    top: 37%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+  }
+/* Form Styles */
+.UI-form .Field {
+  margin-bottom: 1.5rem;
+}
+
+.Field-el {
+  transition: all 0.2s ease-in-out;
+}
+
+.Field-el:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+/* Button Styles */
+.btn--gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+}
+
+.btn--gradient:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Mobile Payment Form Animation */
+.mobile-payment-form {
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-payment-form.open {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .form-position-ab {
+    position: static;
+    transform: none;
+  }
+  .content {
+    padding: 16px;
+  }
+  
+  .grid.grid-cols-1.lg\\:grid-cols-3 {
+    gap: 16px;
+  }
+  
+  .form-footer-payment {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  #fin-logo {
+    margin-bottom: 16px;
+  }
+}
+
+
+/* Animation for form interactions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.Field {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Custom scrollbar for mobile payment form */
+.mobile-payment-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mobile-payment-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.mobile-payment-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.mobile-payment-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
