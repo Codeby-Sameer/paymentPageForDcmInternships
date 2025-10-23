@@ -131,7 +131,7 @@ const DetailsContent = ({ showPaymentForm, setShowPaymentForm, workshopData }) =
                     </div>
 
                     {/* Organizer Details */}
-                    <div className=" p-3 lg:p-4  ">
+                    <div className=" p-3 lg:p-4 lg:pb-0 ">
                         <h3 className="font-semibold text-gray-900 text-base lg:text-lg  flex items-center">
                             Organized By
                         </h3>
